@@ -1,0 +1,560 @@
+
+--====================================================
+-- 👑 BAOHUY VIP BULID V4.1
+-- ROYAL SILK EDITION
+-- Creator: BAOHUY
+-- Roblox Studio / LocalScript
+--====================================================
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UIS = game:GetService("UserInputService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- CONFIGURATION
+local CONFIG = {
+    NAME = "BAOHUY VIP BULID",
+    VERSION = "4.1",
+    CREATOR = "BAOHUY",
+
+    GOLD = Color3.fromRGB(235, 190, 90),
+    PURPLE = Color3.fromRGB(105, 45, 155),
+    DARK = Color3.fromRGB(17, 10, 27),
+    PANEL = Color3.fromRGB(39, 25, 54),
+    WHITE = Color3.fromRGB(255, 245, 225)
+}
+
+-- PUBLIC INFORMATION PLACEHOLDERS
+local Eggs = {
+    {"Common Egg", "Common", "Chưa có dữ liệu"},
+    {"Rare Egg", "Rare", "Chưa có dữ liệu"},
+    {"Legendary Egg", "Legendary", "Chưa có dữ liệu"},
+    {"Secret Egg", "Secret", "Chưa có dữ liệu"}
+}
+
+local EventInfo = "Chưa có thông báo sự kiện mới."
+
+-- REMOVE OLD MENU
+local old = PlayerGui:FindFirstChild("BAOHUY_ROYAL_V41")
+if old then old:Destroy() end
+
+local GUI = Instance.new("ScreenGui")
+GUI.Name = "BAOHUY_ROYAL_V41"
+GUI.ResetOnSpawn = false
+GUI.IgnoreGuiInset = true
+GUI.DisplayOrder = 50
+GUI.Parent = PlayerGui
+
+-- HELPER FUNCTIONS
+local function Corner(obj, radius)
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, radius or 12)
+    c.Parent = obj
+end
+
+local function Border(obj, color, thickness)
+    local s = Instance.new("UIStroke")
+    s.Color = color or CONFIG.GOLD
+    s.Thickness = thickness or 1.5
+    s.Parent = obj
+    return s
+end
+
+local function MakeLabel(parent, text, height, size)
+    local l = Instance.new("TextLabel")
+    l.Size = UDim2.new(1, -20, 0, height or 35)
+    l.BackgroundTransparency = 1
+    l.Text = text
+    l.TextColor3 = CONFIG.WHITE
+    l.Font = Enum.Font.GothamBold
+    l.TextSize = size or 14
+    l.TextWrapped = true
+    l.TextXAlignment = Enum.TextXAlignment.Left
+    l.Parent = parent
+    return l
+end
+
+local function MakeButton(parent, text, height)
+    local b = Instance.new("TextButton")
+    b.Size = UDim2.new(1, -20, 0, height or 42)
+    b.BackgroundColor3 = CONFIG.PURPLE
+    b.Text = text
+    b.TextColor3 = CONFIG.WHITE
+    b.Font = Enum.Font.GothamBold
+    b.TextSize = 14
+    b.Parent = parent
+    Corner(b, 10)
+    Border(b, CONFIG.GOLD)
+    return b
+end
+
+-- MAIN MENU
+local Main = Instance.new("Frame")
+Main.Name = "RoyalMain"
+Main.Size = UDim2.fromScale(0.94, 0.82)
+Main.Position = UDim2.fromScale(0.5, 0.5)
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = CONFIG.DARK
+Main.BorderSizePixel = 0
+Main.ClipsDescendants = true
+Main.Parent = GUI
+
+Corner(Main, 20)
+Border(Main, CONFIG.GOLD, 3)
+
+local constraint = Instance.new("UISizeConstraint")
+constraint.MinSize = Vector2.new(300, 350)
+constraint.MaxSize = Vector2.new(850, 700)
+constraint.Parent = Main
+
+-- ROYAL SILK BACKGROUND
+local Background = Instance.new("Frame")
+Background.Size = UDim2.fromScale(1, 1)
+Background.BackgroundColor3 = CONFIG.DARK
+Background.BorderSizePixel = 0
+Background.ZIndex = 0
+Background.Parent = Main
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 8, 35)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(65, 25, 85)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 8, 25))
+})
+gradient.Rotation = 45
+gradient.Parent = Background
+
+-- SILK WAVES
+for i = 1, 5 do
+    local wave = Instance.new("Frame")
+    wave.Size = UDim2.new(1.4, 0, 0, 3)
+    wave.Position = UDim2.new(-0.2, 0, i * 0.17, 0)
+    wave.Rotation = -12
+    wave.BackgroundColor3 = CONFIG.GOLD
+    wave.BackgroundTransparency = 0.83
+    wave.BorderSizePixel = 0
+    wave.ZIndex = 1
+    wave.Parent = Background
+end
+
+-- ROYAL EMBLEM
+local emblem = Instance.new("TextLabel")
+emblem.Size = UDim2.fromScale(0.8, 0.28)
+emblem.Position = UDim2.fromScale(0.1, 0.22)
+emblem.BackgroundTransparency = 1
+emblem.Text = "👑"
+emblem.TextScaled = true
+emblem.TextColor3 = CONFIG.GOLD
+emblem.ZIndex = 1
+emblem.Parent = Background
+
+local dragon = Instance.new("TextLabel")
+dragon.Size = UDim2.fromScale(0.8, 0.2)
+dragon.Position = UDim2.fromScale(0.1, 0.5)
+dragon.BackgroundTransparency = 1
+dragon.Text = "🐉"
+dragon.TextScaled = true
+dragon.ZIndex = 1
+dragon.Parent = Background
+
+local brand = Instance.new("TextLabel")
+brand.Size = UDim2.fromScale(0.9, 0.1)
+brand.Position = UDim2.fromScale(0.05, 0.72)
+brand.BackgroundTransparency = 1
+brand.Text = "BAOHUY VIP BULID"
+brand.TextColor3 = CONFIG.GOLD
+brand.TextScaled = true
+brand.Font = Enum.Font.GothamBlack
+brand.ZIndex = 1
+brand.Parent = Background
+
+-- DARK OVERLAY
+local overlay = Instance.new("Frame")
+overlay.Size = UDim2.fromScale(1, 1)
+overlay.BackgroundColor3 = CONFIG.DARK
+overlay.BackgroundTransparency = 0.28
+overlay.BorderSizePixel = 0
+overlay.ZIndex = 2
+overlay.Parent = Main
+
+-- HEADER
+local Header = Instance.new("Frame")
+Header.Size = UDim2.new(1, 0, 0, 65)
+Header.BackgroundColor3 = CONFIG.PANEL
+Header.BackgroundTransparency = 0.05
+Header.BorderSizePixel = 0
+Header.ZIndex = 4
+Header.Parent = Main
+
+local title = MakeLabel(
+    Header,
+    "👑 BAOHUY VIP BULID",
+    32,
+    19
+)
+title.Position = UDim2.new(0, 12, 0, 3)
+title.Size = UDim2.new(1, -70, 0, 30)
+title.ZIndex = 5
+
+local subtitle = MakeLabel(
+    Header,
+    "ROYAL SILK EDITION • V4.1",
+    20,
+    11
+)
+subtitle.Position = UDim2.new(0, 14, 0, 35)
+subtitle.ZIndex = 5
+
+local close = Instance.new("TextButton")
+close.Size = UDim2.fromOffset(42, 42)
+close.Position = UDim2.new(1, -50, 0, 11)
+close.BackgroundColor3 = CONFIG.PURPLE
+close.Text = "✕"
+close.TextColor3 = CONFIG.WHITE
+close.TextSize = 22
+close.Font = Enum.Font.GothamBold
+close.ZIndex = 6
+close.Parent = Header
+Corner(close, 10)
+Border(close, CONFIG.GOLD)
+
+close.MouseButton1Click:Connect(function()
+    GUI:Destroy()
+end)
+
+-- DRAG MENU
+local dragging = false
+local dragStart
+local startPosition
+
+Header.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPosition = Main.Position
+    end
+end)
+
+UIS.InputChanged:Connect(function(input)
+    if dragging and (
+        input.UserInputType == Enum.UserInputType.MouseMovement
+        or input.UserInputType == Enum.UserInputType.Touch
+    ) then
+        local delta = input.Position - dragStart
+        Main.Position = UDim2.new(
+            startPosition.X.Scale,
+            startPosition.X.Offset + delta.X,
+            startPosition.Y.Scale,
+            startPosition.Y.Offset + delta.Y
+        )
+    end
+end)
+
+UIS.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1
+    or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
+end)
+
+-- TAB BAR
+local tabNames = {
+    "Trang chủ",
+    "Auto Egg",
+    "Egg Tracker",
+    "Event",
+    "Tính năng",
+    "Phiên bản",
+    "Tác giả",
+    "Cài đặt"
+}
+
+local TabBar = Instance.new("ScrollingFrame")
+TabBar.Size = UDim2.new(1, -16, 0, 45)
+TabBar.Position = UDim2.new(0, 8, 0, 72)
+TabBar.BackgroundTransparency = 1
+TabBar.BorderSizePixel = 0
+TabBar.ScrollBarThickness = 2
+TabBar.ScrollingDirection = Enum.ScrollingDirection.X
+TabBar.AutomaticCanvasSize = Enum.AutomaticSize.X
+TabBar.ZIndex = 5
+TabBar.Parent = Main
+
+local tabLayout = Instance.new("UIListLayout")
+tabLayout.FillDirection = Enum.FillDirection.Horizontal
+tabLayout.Padding = UDim.new(0, 7)
+tabLayout.Parent = TabBar
+
+-- CONTENT
+local Content = Instance.new("Frame")
+Content.Size = UDim2.new(1, -16, 1, -132)
+Content.Position = UDim2.new(0, 8, 0, 123)
+Content.BackgroundColor3 = CONFIG.PANEL
+Content.BackgroundTransparency = 0.12
+Content.BorderSizePixel = 0
+Content.ZIndex = 3
+Content.Parent = Main
+Corner(Content, 12)
+Border(Content, CONFIG.GOLD)
+
+local Pages = {}
+local Buttons = {}
+
+for i, name in ipairs(tabNames) do
+    local page = Instance.new("ScrollingFrame")
+    page.Size = UDim2.new(1, -16, 1, -16)
+    page.Position = UDim2.new(0, 8, 0, 8)
+    page.BackgroundTransparency = 1
+    page.BorderSizePixel = 0
+    page.ScrollBarThickness = 3
+    page.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    page.Visible = false
+    page.ZIndex = 4
+    page.Parent = Content
+
+    local layout = Instance.new("UIListLayout")
+    layout.Padding = UDim.new(0, 9)
+    layout.Parent = page
+
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.fromOffset(112, 38)
+    button.BackgroundColor3 = CONFIG.DARK
+    button.Text = name
+    button.TextColor3 = CONFIG.WHITE
+    button.TextSize = 12
+    button.Font = Enum.Font.GothamBold
+    button.ZIndex = 6
+    button.Parent = TabBar
+    Corner(button, 9)
+    Border(button, CONFIG.GOLD)
+
+    Pages[i] = page
+    Buttons[i] = button
+end
+
+-- CARD FUNCTION
+local function Card(parent, heading, description)
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(1, -8, 0, 105)
+    frame.BackgroundColor3 = CONFIG.DARK
+    frame.BackgroundTransparency = 0.08
+    frame.BorderSizePixel = 0
+    frame.ZIndex = 5
+    frame.Parent = parent
+    Corner(frame, 11)
+    Border(frame, CONFIG.GOLD)
+
+    local h = MakeLabel(frame, heading, 30, 16)
+    h.Position = UDim2.new(0, 10, 0, 5)
+    h.ZIndex = 6
+
+    local d = MakeLabel(frame, description, 58, 12)
+    d.Position = UDim2.new(0, 10, 0, 40)
+    d.Font = Enum.Font.Gotham
+    d.TextYAlignment = Enum.TextYAlignment.Top
+    d.ZIndex = 6
+
+    return frame
+end
+
+-- PAGE 1: HOME
+Card(
+    Pages[1],
+    "👑 ROYAL SILK",
+    "Welcome to BAOHUY VIP BULID!\nVersion 4.1\nRoyal Silk Edition."
+)
+
+Card(
+    Pages[1],
+    "✨ Project Information",
+    "Creator: BAOHUY\nTheme: Purple + Gold\nStyle: Royal Silk."
+)
+
+-- PAGE 2: AUTO EGG
+Card(
+    Pages[2],
+    "🥚 AUTO EGG",
+    "Hướng dẫn nhặt trứng bằng cơ chế tương tác chính thức trong game."
+)
+
+Card(
+    Pages[2],
+    "Hướng dẫn",
+    "1. Tìm vị trí trứng.\n2. Quan sát hướng dẫn của game.\n3. Dùng nút tương tác chính thức."
+)
+
+-- PAGE 3: EGG TRACKER
+Card(
+    Pages[3],
+    "🌐 SERVER EGG TRACKER",
+    "Thông tin công khai được ghi nhận.\nKhông đọc dữ liệu ẩn của server."
+)
+
+local eggLabel = MakeLabel(Pages[3], "", 190, 13)
+eggLabel.Font = Enum.Font.Gotham
+eggLabel.TextYAlignment = Enum.TextYAlignment.Top
+
+local function RefreshEggs()
+    local result = {}
+
+    for _, egg in ipairs(Eggs) do
+        table.insert(
+            result,
+            "🥚 " .. egg[1] ..
+            "\nRarity: " .. egg[2] ..
+            "\nSpawn: " .. egg[3] .. "\n"
+        )
+    end
+
+    eggLabel.Text = table.concat(result, "\n")
+end
+
+RefreshEggs()
+
+local refreshEggs = MakeButton(
+    Pages[3],
+    "↻ Refresh Egg List",
+    42
+)
+
+refreshEggs.MouseButton1Click:Connect(RefreshEggs)
+
+-- PAGE 4: EVENTS
+Card(
+    Pages[4],
+    "🎉 EVENT NOTIFICATION",
+    "Thông báo sự kiện do game công khai."
+)
+
+local eventLabel = MakeLabel(Pages[4], EventInfo, 80, 13)
+eventLabel.Font = Enum.Font.Gotham
+
+local eventRefresh = MakeButton(
+    Pages[4],
+    "↻ Refresh Event",
+    42
+)
+
+eventRefresh.MouseButton1Click:Connect(function()
+    eventLabel.Text = EventInfo
+end)
+
+-- PAGE 5: FEATURES
+Card(
+    Pages[5],
+    "⚡ FEATURES",
+    "• Royal Silk Background\n• Gold Neon Border\n• Mobile UI\n• Egg Tracker Display\n• Event Information"
+)
+
+Card(
+    Pages[5],
+    "🎨 Customization",
+    "• Theme colors\n• Drag menu\n• Scrollable tabs\n• Royal decoration"
+)
+
+-- PAGE 6: VERSION
+Card(
+    Pages[6],
+    "🚀 VERSION 4.1",
+    "Current Version: V4.1\nEdition: Royal Silk."
+)
+
+Card(
+    Pages[6],
+    "UPDATE INFORMATION",
+    "Phiên bản mới cần được chủ sở hữu phát hành và cập nhật."
+)
+
+local versionButton = MakeButton(
+    Pages[6],
+    "Check Version",
+    42
+)
+
+versionButton.MouseButton1Click:Connect(function()
+    versionButton.Text = "Current: V" .. CONFIG.VERSION
+end)
+
+-- PAGE 7: CREATOR
+Card(
+    Pages[7],
+    "👑 CREATOR",
+    "BAOHUY"
+)
+
+Card(
+    Pages[7],
+    "PROJECT",
+    "BAOHUY VIP BULID\nVersion 4.1\nRoyal Silk Edition."
+)
+
+-- PAGE 8: SETTINGS
+Card(
+    Pages[8],
+    "⚙️ SETTINGS",
+    "Customize Royal Silk appearance."
+)
+
+local themeButton = MakeButton(
+    Pages[8],
+    "Switch Purple / Blue",
+    42
+)
+
+local blueMode = false
+
+themeButton.MouseButton1Click:Connect(function()
+    blueMode = not blueMode
+
+    if blueMode then
+        CONFIG.PURPLE = Color3.fromRGB(35, 120, 220)
+        CONFIG.GOLD = Color3.fromRGB(100, 220, 255)
+        themeButton.Text = "Switch Blue / Purple"
+    else
+        CONFIG.PURPLE = Color3.fromRGB(105, 45, 155)
+        CONFIG.GOLD = Color3.fromRGB(235, 190, 90)
+        themeButton.Text = "Switch Purple / Blue"
+    end
+
+    for _, obj in ipairs(GUI:GetDescendants()) do
+        if obj:IsA("UIStroke") then
+            obj.Color = CONFIG.GOLD
+        end
+    end
+end)
+
+-- TAB NAVIGATION
+local function ShowTab(index)
+    for i, page in ipairs(Pages) do
+        page.Visible = (i == index)
+        Buttons[i].BackgroundColor3 =
+            (i == index) and CONFIG.PURPLE or CONFIG.DARK
+    end
+end
+
+for i, button in ipairs(Buttons) do
+    button.MouseButton1Click:Connect(function()
+        ShowTab(i)
+    end)
+end
+
+ShowTab(1)
+
+-- OPEN ANIMATION
+local originalSize = Main.Size
+Main.Size = UDim2.fromScale(0.8, 0.7)
+
+TweenService:Create(
+    Main,
+    TweenInfo.new(
+        0.35,
+        Enum.EasingStyle.Back,
+        Enum.EasingDirection.Out
+    ),
+    {Size = originalSize}
+):Play()
+
+print("BAOHUY VIP BULID V4.1 ROYAL SILK READY!")
